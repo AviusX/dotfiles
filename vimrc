@@ -1,89 +1,85 @@
-" An example for a vimrc file.
-"
-" Maintainer:	Bram Moolenaar <Bram@vim.org>
-" Last change:	2017 Sep 20
-"
-" To use it, copy it to
-"     for Unix and OS/2:  ~/.vimrc
-"	      for Amiga:  s:.vimrc
-"  for MS-DOS and Win32:  $VIM\_vimrc
-"	    for OpenVMS:  sys$login:.vimrc
+" ============================= vim-plug setup =============================
+call plug#begin('~/.vim/plugged')
 
-" When started as "evim", evim.vim will already have done these settings.
-if v:progname =~? "evim"
-  finish
-endif
+" ========== Plugins Below ==========
 
-" Get the defaults that most users want.
-source $VIMRUNTIME/defaults.vim
+" Utility
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-surround'
+Plug 'preservim/nerdtree'
 
-if has("vms")
-  set nobackup		" do not keep a backup file, use versions instead
-else
-  set backup		" keep a backup file (restore to previous version)
-  if has('persistent_undo')
-    set undofile	" keep an undo file (undo changes after closing)
-  endif
-endif
+" Customization
+Plug 'ap/vim-css-color'
+Plug 'itchyny/lightline.vim'
+Plug 'kaicataldo/material.vim'
+Plug 'joshdick/onedark.vim'
+Plug 'ntk148v/vim-horizon'
+Plug 'drewtempelmeyer/palenight.vim'
+Plug 'dracula/vim', { 'as': 'dracula' }
 
-if &t_Co > 2 || has("gui_running")
-  " Switch on highlighting the last used search pattern.
-  set hlsearch
-endif
+" For fun
+Plug 'Stoozy/vimcord'
 
-" Only do this part when compiled with support for autocommands.
-if has("autocmd")
+" Language Specific
+Plug 'dart-lang/dart-vim-plugin'
+" ===================================
 
-  " Put these in an autocmd group, so that we can delete them easily.
-  augroup vimrcEx
-  au!
+call plug#end()
+" ==========================================================================
 
-  " For all text files set 'textwidth' to 78 characters.
-  autocmd FileType text setlocal textwidth=0
+" ================================= Remaps =================================
 
-  augroup END
+nnoremap <C-n> :NERDTreeToggle<CR>
+nnoremap <C-f> :NERDTreeFind<CR>
+nnoremap <silent> <Space>f :call CocAction('format')<CR>
 
-else
+" ==========================================================================
 
-  set autoindent		" always set autoindenting on
+" ============================ General settings ============================
 
-endif " has("autocmd")
-
-" Add optional packages.
+set relativenumber
 set number
 filetype plugin indent on
+set autoindent
+" Use tabs not spaces
+set noexpandtab
 " show existing tab with 4 spaces width
 set tabstop=4
 " when indenting with '>', use 4 spaces width
 set shiftwidth=4
-" On pressing tab, insert 4 spaces
-set expandtab
-" Underline the current line.
-set cursorline
 " Disable writing temporary files after saving
 set nobackup
 set noundofile
 
-" Changing insert cursor shape (gnome-terminal):
-if has("autocmd")
-  au VimEnter,InsertLeave * silent execute '!echo -ne "\e[1 q"' | redraw!
-  au InsertEnter,InsertChange *
-    \ if v:insertmode == 'i' | 
-    \   silent execute '!echo -ne "\e[5 q"' | redraw! |
-    \ elseif v:insertmode == 'r' |
-    \   silent execute '!echo -ne "\e[3 q"' | redraw! |
-    \ endif
-  au VimLeave * silent execute '!echo -ne "\e[ q"' | redraw!
-endif
-set ttimeout
-set ttimeoutlen=1
-set listchars=tab:>-,trail:~,extends:>,precedes:<,space:.
-set ttyfast
+" ==========================================================================
 
-" The matchit plugin makes the % command work better, but it is not backwards
-" compatible.
-" The ! means the package won't be loaded right away but when plugins are
-" loaded during initialization.
-if has('syntax') && has('eval')
-  packadd! matchit
-endif
+" ========================== NERDTree Settings =============================
+
+" Start NERDTree on startup and put the cursor back into the main pane
+autocmd VimEnter * NERDTree | wincmd p
+" Automatically exit vim when NERDTree is the last pane left.
+autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() |
+    \ quit | endif
+
+" ==========================================================================
+
+" ============================ Lightline Config ============================
+
+let g:lightline = {
+      \ 'colorscheme': 'deus',
+      \ }
+set laststatus=2
+
+" ==========================================================================
+
+" ================================= Theme ==================================
+
+autocmd ColorScheme * highlight Normal ctermbg=NONE guibg=NONE
+colorscheme palenight
+
+" Setting NERDtree pane separator appearance
+set fillchars=""
+highlight VertSplit guibg=Orange guifg=Black ctermbg=7 ctermfg=97
+
+" ==========================================================================
