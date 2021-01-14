@@ -18,26 +18,31 @@ Plug 'ntk148v/vim-horizon'
 Plug 'drewtempelmeyer/palenight.vim'
 Plug 'dracula/vim', { 'as': 'dracula' }
 
-" For fun
-Plug 'Stoozy/vimcord'
-
 " Language Specific
 Plug 'dart-lang/dart-vim-plugin'
 " ===================================
 
 call plug#end()
+
 " ==========================================================================
 
 " ================================= Remaps =================================
 
+" NERDTree
 nnoremap <C-n> :NERDTreeToggle<CR>
 nnoremap <C-f> :NERDTreeFind<CR>
-nnoremap <silent> <Space>f :call CocAction('format')<CR>
 
-" ==========================================================================
+" Tabs
+nnoremap <silent> <C-t> :tabnew<CR>
+nnoremap <Tab> gt
+nnoremap <S-Tab> gT
+
+" CoC
+nnoremap <silent> <Space>f :call CocAction('format')<CR>
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<CR>"
 
 " ============================ General settings ============================
-
 set relativenumber
 set number
 filetype plugin indent on
@@ -61,6 +66,8 @@ autocmd VimEnter * NERDTree | wincmd p
 " Automatically exit vim when NERDTree is the last pane left.
 autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() |
     \ quit | endif
+" Open the existing NERDTree on each new tab.
+autocmd BufWinEnter * silent NERDTreeMirror
 
 " ==========================================================================
 
@@ -76,10 +83,9 @@ set laststatus=2
 " ================================= Theme ==================================
 
 autocmd ColorScheme * highlight Normal ctermbg=NONE guibg=NONE
-colorscheme palenight
-
 " Setting NERDtree pane separator appearance
 set fillchars=""
 highlight VertSplit guibg=Orange guifg=Black ctermbg=7 ctermfg=97
+colorscheme palenight
 
 " ==========================================================================
